@@ -359,7 +359,7 @@ function tick() {
   const hourly = dailyRate / c.dailyHours;
   const earned = elapsedSec * (hourly / 3600);
   $('earned').textContent = fmt(earned);
-  $('persec').textContent = fmt(hourly / 3600);
+  $('persec').textContent = fmt(hourly / 3600, 4)
   $('hourly').textContent = '¥' + fmt(hourly);
   const wh = Math.floor(elapsedSec / 3600), wm = Math.floor((elapsedSec % 3600) / 60);
   $('worked').textContent = wh + 'h' + wm + 'm';

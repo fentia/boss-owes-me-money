@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>牛马工资时钟</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <button class="settings-btn" id="settingsBtn">设置</button>
+
+  <h1>牛马工资时钟</h1>
+  <div class="sub">把每一秒都换成老板欠你的钱</div>
+
+  <div class="stage">
+    <div class="card display">
+      <div class="clock-row">
+        <div class="clock-left">
+        <div class="analog">
+          <svg viewBox="0 0 200 200" id="clock">
+            <circle cx="100" cy="100" r="94" fill="#0f0d0b" stroke="#2e2823" stroke-width="4"/>
+            <circle cx="100" cy="100" r="88" fill="none" stroke="#2e2823" stroke-width="6"/>
+            <path id="windowArc" d="" fill="none" stroke="#6b5d4f" stroke-width="6" stroke-linecap="round" opacity="0.9"/>
+            <path id="breakArc"  d="" fill="none" stroke="#e23b3b" stroke-width="6" stroke-linecap="butt" opacity="0.6"/>
+            <g id="ticks" stroke="#5a5048" stroke-width="2"></g>
+          </svg>
+          <div class="stat fish" id="fishBtn" role="button" tabindex="0"><div class="k" id="fishLabel">摸鱼</div></div>
+          <svg viewBox="0 0 200 200" id="hands">
+            <path id="ring" d="" fill="none" stroke="#f2c14e" stroke-width="6" stroke-linecap="round" opacity="0.95"/>
+            <line id="hour" x1="100" y1="100" x2="100" y2="55" stroke="#f2c14e" stroke-width="6" stroke-linecap="round"/>
+            <line id="min"  x1="100" y1="100" x2="100" y2="35" stroke="#e9e2d8" stroke-width="4" stroke-linecap="round"/>
+            <line id="sec"  x1="100" y1="110" x2="100" y2="28" stroke="#e23b3b" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="100" cy="100" r="5" fill="#e23b3b"/>
+          </svg>
+        </div>
+        </div>
+        <div class="big">
+          <div class="hero-row">
+            <div class="hero-col hero-col-left">
+              <div class="label">今日已赚了老板</div>
+              <div class="money"><small>¥</small><span id="earned">0.00</span></div>
+              <div class="hero-rates">
+                <div class="rate"><span class="rate-k">时薪</span><span class="rate-v" id="hourly">0</span></div>
+                <div class="rate"><span class="rate-k">每秒进账</span><span class="rate-v green"><span id="persec">0.00</span> 元</span></div>
+              </div>
+            </div>
+            <div class="hero-sep"></div>
+            <div class="hero-col hero-col-right">
+              <div class="label">今日还剩</div>
+              <div class="hero-side-v" id="dayRemain">¥0.00</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panels">
+        <section class="group">
+          <div class="group-title">Duration</div>
+          <div class="stats">
+            <div class="stat"><div class="k">已上班</div><div class="v" id="worked">0h0m</div></div>
+            <div class="stat"><div class="k">距离下班</div><div class="v" id="left">--</div></div>
+            <div class="stat"><div class="k">今日摸鱼时长</div><div class="v" id="todayFish">0h0m</div></div>
+            <div class="stat"><div class="k">本月摸鱼时长</div><div class="v" id="fishTime">0h0m</div></div>
+          </div>
+        </section>
+        <section class="group">
+          <div class="group-title">Money</div>
+          <div class="stats">
+            <div class="stat"><div class="k">本月已赚</div><div class="v" id="monthEarned">0</div></div>
+            <div class="stat"><div class="k">本月摸鱼赚了</div><div class="v" id="monthFish">0</div></div>
+            <div class="stat"><div class="k">本月剩余</div><div class="v" id="monthRemain">0</div></div>
+          </div>
+        </section>
+        <section class="group">
+          <div class="group-title">Day</div>
+          <div class="stats">
+            <div class="stat"><div class="k">本月工作日</div><div class="v" id="monthDays">0</div></div>
+            <div class="stat"><div class="k">距离本周休息</div><div class="v" id="restLeft">--</div></div>
+            <div class="stat"><div class="k" id="holidayLabel">距离法定节假日</div><div class="v" id="holidayLeft">--</div></div>
+            <div class="stat"><div class="k">距离发薪日</div><div class="v" id="payLeft">--</div></div>
+            <div class="stat"><div class="k">距离退休</div><div class="v" id="retireLeft">--</div></div>
+          </div>
+        </section>
+      </div>
+
+      <div class="progress-wrap">
+        <div class="progress-label"><span>进行中</span><span id="pct">0%</span></div>
+        <div class="bar"><i id="fill"></i></div>
+      </div>
+
+      <div class="quote" id="quote"></div>
+      <div class="hnote" id="hnote"></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    点右上角「设置」修改参数，<b>改完立即生效</b>
+  </div>
+
+  <div class="overlay" id="overlay">
+    <div class="modal">
+      <div class="modal-head">
+        <h2>打工参数</h2>
+        <button class="x" id="closeBtn">关闭</button>
+      </div>
+      <div class="field">
+        <label>月薪（元）</label>
+        <div class="num-wrap">
+          <input type="number" id="salary" value="5000" min="0" step="100">
+          <div class="stepper">
+            <button type="button" class="step-up" data-target="salary" data-dir="1">▲</button>
+            <button type="button" class="step-down" data-target="salary" data-dir="-1">▼</button>
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <label>每周休息</label>
+        <div class="select" id="restModeBox" tabindex="0">
+          <div class="sel-trigger" id="restModeTrigger"><span>双休（周六周日休）</span></div>
+          <ul class="sel-menu">
+            <li data-val="double" class="active">双休（周六周日休）</li>
+            <li data-val="single">单休（仅周日休）</li>
+            <li data-val="none">无休（全周上班）</li>
+            <li data-val="alt">大小周（单双休交替）</li>
+          </ul>
+          <select id="restMode" style="display:none">
+            <option value="double" selected>双休（周六周日休）</option>
+            <option value="single">单休（仅周日休）</option>
+            <option value="none">无休（全周上班）</option>
+            <option value="alt">大小周（单双休交替）</option>
+          </select>
+        </div>
+      </div>
+      <div class="field" id="altWrap" style="display:none">
+        <label>本周类型（大小周基准）</label>
+        <div class="select" id="altThisWeekBox" tabindex="0">
+          <div class="sel-trigger" id="altThisWeekTrigger"><span>本周双休</span></div>
+          <ul class="sel-menu">
+            <li data-val="double" class="active">本周双休</li>
+            <li data-val="single">本周单休</li>
+          </ul>
+          <select id="altThisWeek" style="display:none">
+            <option value="double" selected>本周双休</option>
+            <option value="single">本周单休</option>
+          </select>
+        </div>
+        <div class="hint">以此周为基准，逐周交替单休 / 双休</div>
+      </div>
+      <div class="field">
+        <label>上班时间</label>
+        <input type="time" id="start" value="09:00">
+      </div>
+      <div class="field">
+        <label>下班时间</label>
+        <input type="time" id="end" value="18:00">
+      </div>
+      <div class="field switch-field">
+        <span class="switch-label">中午休息</span>
+        <label class="switch">
+          <input type="checkbox" id="break" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+      <div class="field" id="breakWrap" style="display:block">
+        <label>午休时段</label>
+        <div style="display:flex;gap:8px;align-items:center">
+          <input type="time" id="breakStart" value="12:00">
+          <span style="color:var(--muted)">至</span>
+          <input type="time" id="breakEnd" value="13:00">
+        </div>
+      </div>
+      <div class="field">
+        <label>发薪日（每月几号）</label>
+        <div class="num-wrap">
+          <input type="number" id="payday" value="15" min="1" max="31" step="1">
+          <div class="stepper">
+            <button type="button" class="step-up" data-target="payday" data-dir="1">▲</button>
+            <button type="button" class="step-down" data-target="payday" data-dir="-1">▼</button>
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <label>退休日</label>
+        <input type="date" id="retire">
+      </div>
+      <div class="btn-row">
+        <button class="ghost" id="importBtn">导入数据</button>
+        <button class="ghost" id="exportBtn">导出数据</button>
+      </div>
+      <button class="done" id="doneBtn">完成</button>
+    </div>
+  </div>
+
+  <script src="javascript.js" defer></script>
+</body>
+</html>

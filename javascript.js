@@ -138,7 +138,7 @@ function config() {
   const salary = Math.max(0, parseFloat($('salary').value) || 0);
   const restMode = $('restMode').value;
   const altThisWeek = $('altThisWeek').value;
-  const [sh, sm] = ($('start').value || '09:00').split(':').map(Number);
+  const [sh, sm] = ($('start').value || '09:30').split(':').map(Number);
   const [eh, em] = ($('end').value || '18:00').split(':').map(Number);
   const brk = $('break').checked;
   const [bsh, bsm] = ($('breakStart').value || '12:00').split(':').map(Number);
